@@ -100,6 +100,16 @@ class InkController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void loadStrokes(Iterable<InkStroke> strokes) {
+    _strokes
+      ..clear()
+      ..addAll(strokes);
+    _undoStack.clear();
+    _redoStack.clear();
+    _activeStroke = null;
+    notifyListeners();
+  }
+
   void _checkpoint() {
     _undoStack.add(List.of(_strokes));
     _redoStack.clear();
