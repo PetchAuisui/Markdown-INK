@@ -4,6 +4,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 
 import 'ink/ink_canvas.dart';
 import 'ink/ink_controller.dart';
+import 'ink/ink_toolbar.dart';
 import 'sample_markdown.dart';
 
 class AnnotationPage extends StatefulWidget {
@@ -16,6 +17,7 @@ class AnnotationPage extends StatefulWidget {
 class _AnnotationPageState extends State<AnnotationPage> {
   static const _documentHeight = 1500.0;
   final _inkController = InkController();
+  bool _drawWithTouch = false;
 
   @override
   void dispose() {
@@ -44,6 +46,9 @@ class _AnnotationPageState extends State<AnnotationPage> {
             child: ScrollConfiguration(
               behavior: const _DocumentScrollBehavior(),
               child: SingleChildScrollView(
+                physics: _drawWithTouch
+                    ? const NeverScrollableScrollPhysics()
+                    : const ClampingScrollPhysics(),
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(minHeight: _documentHeight),
                   child: Stack(
@@ -69,7 +74,7 @@ class _AnnotationPageState extends State<AnnotationPage> {
                       Positioned.fill(
                         child: InkCanvas(
                           controller: _inkController,
-                          drawWithTouch: false,
+                          drawWithTouch: _drawWithTouch,
                         ),
                       ),
                     ],
@@ -79,6 +84,13 @@ class _AnnotationPageState extends State<AnnotationPage> {
             ),
           ),
         ),
+      ),
+      bottomNavigationBar: InkToolbar(
+        controller: _inkController,
+        drawWithTouch: _drawWithTouch,
+        onDrawWithTouchChanged: (value) {
+          setState(() => _drawWithTouch = value);
+        },
       ),
     );
   }

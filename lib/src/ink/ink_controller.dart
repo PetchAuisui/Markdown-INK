@@ -21,6 +21,24 @@ class InkController extends ChangeNotifier {
   Color color = const Color(0xFF2455E6);
   double width = 3.5;
 
+  void setTool(InkTool value) {
+    if (tool == value) return;
+    tool = value;
+    notifyListeners();
+  }
+
+  void setColor(Color value) {
+    if (color == value) return;
+    color = value;
+    notifyListeners();
+  }
+
+  void setWidth(double value) {
+    if (width == value) return;
+    width = value;
+    notifyListeners();
+  }
+
   void beginStroke(Offset point, {double pressure = 1}) {
     _activeStroke = InkStroke(
       points: [InkPoint(point, pressure: pressure)],
