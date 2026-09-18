@@ -1,10 +1,27 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
+import 'ink/ink_canvas.dart';
+import 'ink/ink_controller.dart';
 import 'sample_markdown.dart';
 
-class AnnotationPage extends StatelessWidget {
+class AnnotationPage extends StatefulWidget {
   const AnnotationPage({super.key});
+
+  @override
+  State<AnnotationPage> createState() => _AnnotationPageState();
+}
+
+class _AnnotationPageState extends State<AnnotationPage> {
+  static const _documentHeight = 1500.0;
+  final _inkController = InkController();
+
+  @override
+  void dispose() {
+    _inkController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,19 +41,39 @@ class AnnotationPage extends StatelessWidget {
           child: Card(
             margin: const EdgeInsets.all(16),
             clipBehavior: Clip.antiAlias,
-            child: Markdown(
-              data: sampleMarkdown,
-              padding: const EdgeInsets.fromLTRB(48, 40, 48, 120),
-              selectable: true,
-              styleSheet: MarkdownStyleSheet(
-                h1: Theme.of(context).textTheme.headlineLarge,
-                h2: Theme.of(context).textTheme.headlineMedium,
-                p: Theme.of(
-                  context,
-                ).textTheme.bodyLarge?.copyWith(height: 1.65),
-                blockquoteDecoration: BoxDecoration(
-                  color: const Color(0xFFE9EEFF),
-                  borderRadius: BorderRadius.circular(8),
+            child: ScrollConfiguration(
+              behavior: const _DocumentScrollBehavior(),
+              child: SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(minHeight: _documentHeight),
+                  child: Stack(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(48, 40, 48, 120),
+                        child: MarkdownBody(
+                          data: sampleMarkdown,
+                          selectable: true,
+                          styleSheet: MarkdownStyleSheet(
+                            h1: Theme.of(context).textTheme.headlineLarge,
+                            h2: Theme.of(context).textTheme.headlineMedium,
+                            p: Theme.of(
+                              context,
+                            ).textTheme.bodyLarge?.copyWith(height: 1.65),
+                            blockquoteDecoration: BoxDecoration(
+                              color: const Color(0xFFE9EEFF),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Positioned.fill(
+                        child: InkCanvas(
+                          controller: _inkController,
+                          drawWithTouch: false,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -45,4 +82,15 @@ class AnnotationPage extends StatelessWidget {
       ),
     );
   }
+}
+
+class _DocumentScrollBehavior extends MaterialScrollBehavior {
+  const _DocumentScrollBehavior();
+
+  @override
+  Set<PointerDeviceKind> get dragDevices => const {
+    PointerDeviceKind.touch,
+    PointerDeviceKind.mouse,
+    PointerDeviceKind.trackpad,
+  };
 }
