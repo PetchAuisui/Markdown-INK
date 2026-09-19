@@ -5,6 +5,8 @@ Flutter demo สำหรับเปิดและแสดง Markdown แล
 ## Features
 
 - เปิดไฟล์ `.md`, `.markdown` หรือ `.txt` บน macOS และ Web
+- แก้ Markdown ในโหมด **Text** และดูผลพร้อมวาดหมึกในโหมด **Draw**
+- เลือกรูป PNG/JPEG/GIF/WebP แล้วแทรก Markdown image ที่ตำแหน่งเคอร์เซอร์
 - render Markdown พร้อม scroll เอกสารยาว
 - วาดด้วย stylus โดยแยกจาก finger scroll
 - เปิด **Touch draws** เพื่อทดลองด้วยนิ้วหรือเมาส์
@@ -55,6 +57,10 @@ lib/
 
 ## Input behavior
 
+- ปุ่ม **Open Markdown file** เลือกไฟล์ข้อความจากเครื่อง
+- ปุ่ม **Insert image** เปิดตัวเลือกไฟล์รูปและเปลี่ยนเข้าโหมด Text
+- รูปที่แทรกจะถูกฝังเป็น data URI ใน Markdown เพื่อให้ยังแสดงได้เมื่อเปิดแอปอีกครั้ง
+
 - Stylus / Apple Pencil: วาดหมึก
 - Inverted stylus: ลบ stroke
 - Finger, mouse wheel หรือ trackpad: scroll เมื่อ **Touch draws** ปิด
@@ -65,4 +71,6 @@ lib/
 - ใช้ชื่อไฟล์เป็น document key; โปรเจกต์จริงควรใช้ path หรือ content hash ป้องกันชื่อซ้ำ
 - eraser ลบทั้ง stroke ที่แตะ ไม่ได้ตัดเฉพาะช่วงของเส้น
 - local storage เหมาะกับ demo; งาน production ควรใช้ไฟล์ sidecar `.ink.json` หรือฐานข้อมูล และเพิ่ม file export/import
+- รูปขนาดใหญ่ทำให้ Markdown และ local storage โตเร็ว; ควรใช้ไฟล์ภาพแยกในงาน production
+- เมื่อแก้ข้อความหรือเพิ่มรูป การจัดวางอาจเปลี่ยนและหมึกเดิมอาจไม่ตรงตำแหน่งข้อความเดิม
 - ความสูง canvas ขั้นต่ำตั้งไว้สำหรับเอกสารตัวอย่าง; งาน production ควรวัด layout และแบ่งเอกสารยาวเป็นหน้า/tiles

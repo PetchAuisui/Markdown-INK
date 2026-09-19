@@ -40,6 +40,12 @@ class AnnotationStore {
     return _decodeStrokes(preferences.getString(_inkKey(name)));
   }
 
+  Future<void> saveMarkdown(String name, String markdown) async {
+    final preferences = await SharedPreferences.getInstance();
+    await preferences.setString(_documentNameKey, name);
+    await preferences.setString(_documentContentKey, markdown);
+  }
+
   Future<void> saveInk(String documentName, List<InkStroke> strokes) async {
     final preferences = await SharedPreferences.getInstance();
     final json = jsonEncode(strokes.map((stroke) => stroke.toJson()).toList());
