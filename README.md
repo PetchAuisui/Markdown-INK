@@ -1,76 +1,47 @@
-# Markdown Ink Annotation
+# Markdown Layers
 
-Flutter demo สำหรับเปิดและแสดง Markdown แล้วเขียนหมึกแบบ free-form ทับบนเอกสาร หมึกถูกเก็บแยกจาก Markdown และใช้พิกัดของเอกสาร จึงคงตำแหน่งเดิมเมื่อ scroll
+A mobile-first Flutter workspace for opening, editing, and previewing Markdown.
+The architecture keeps Markdown content separate from future annotation and
+image layers.
 
-## Features
+## Current features
 
-- เปิดไฟล์ `.md`, `.markdown` หรือ `.txt` บน macOS และ Web
-- แก้ Markdown ในโหมด **Text** และดูผลพร้อมวาดหมึกในโหมด **Draw**
-- เลือกรูป PNG/JPEG/GIF/WebP แล้วแทรก Markdown image ที่ตำแหน่งเคอร์เซอร์
-- render Markdown พร้อม scroll เอกสารยาว
-- วาดด้วย stylus โดยแยกจาก finger scroll
-- เปิด **Touch draws** เพื่อทดลองด้วยนิ้วหรือเมาส์
-- Pen / eraser, สี, ความหนา, undo / redo และ clear
-- บันทึกเอกสารล่าสุดและ ink อัตโนมัติใน local app storage
-- โหลด ink เดิมกลับมาตามชื่อไฟล์เอกสาร
+- Open Markdown files from the native file picker.
+- Edit plain Markdown with unsaved-change status.
+- Render a selectable preview using Material Design 3.
+- Save to the current file or choose a new destination with Save as.
+- Confirm before replacing unsaved content.
+- Light and dark themes that follow the system setting.
 
-## Run
+## Architecture
 
-```bash
+The Markdown feature separates its domain model and repository contract from
+file-system integration and presentation state. The workspace composes that
+feature with a layer bar. Annotation and image layers are represented as
+separate layer types so their state and rendering can be added without mixing
+them into Markdown content.
+
+## Development
+
+```sh
 flutter pub get
-flutter run -d macos
-```
-
-หรือรันบน Web:
-
-```bash
-flutter run -d chrome
-```
-
-ตรวจคุณภาพด้วย:
-
-```bash
 flutter analyze
 flutter test
-flutter build web --release
-flutter build macos --release
+flutter run
 ```
 
-## Structure
+The app currently targets Android and iOS.
 
-```text
-lib/
-├── main.dart
-└── src/
-    ├── annotation_page.dart
-    ├── sample_markdown.dart
-    ├── ink/
-    │   ├── ink_canvas.dart
-    │   ├── ink_controller.dart
-    │   ├── ink_stroke.dart
-    │   └── ink_toolbar.dart
-    └── persistence/
-        └── annotation_store.dart
-```
+## Getting Started
 
-`InkStroke` ถูก serialize เป็น JSON แล้วเก็บด้วย key แยกจาก Markdown เช่น `ink.lecture-notes.md.json` ภายใน `shared_preferences` สำหรับ demo นี้ ต้นฉบับ Markdown จึงไม่ถูกแก้ไข
+This project is a starting point for a Flutter application.
 
-## Input behavior
+A few resources to get you started if this is your first Flutter project:
 
-- ปุ่ม **Open Markdown file** เลือกไฟล์ข้อความจากเครื่อง
-- ปุ่ม **Insert image** เปิดตัวเลือกไฟล์รูปและเปลี่ยนเข้าโหมด Text
-- รูปที่แทรกจะถูกฝังเป็น data URI ใน Markdown เพื่อให้ยังแสดงได้เมื่อเปิดแอปอีกครั้ง
+- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
+- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
+- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
 
-- Stylus / Apple Pencil: วาดหมึก
-- Inverted stylus: ลบ stroke
-- Finger, mouse wheel หรือ trackpad: scroll เมื่อ **Touch draws** ปิด
-- Finger หรือ mouse drag: วาดเมื่อ **Touch draws** เปิด (scroll ถูกพักเพื่อไม่แย่ง gesture)
-
-## Demo limitations
-
-- ใช้ชื่อไฟล์เป็น document key; โปรเจกต์จริงควรใช้ path หรือ content hash ป้องกันชื่อซ้ำ
-- eraser ลบทั้ง stroke ที่แตะ ไม่ได้ตัดเฉพาะช่วงของเส้น
-- local storage เหมาะกับ demo; งาน production ควรใช้ไฟล์ sidecar `.ink.json` หรือฐานข้อมูล และเพิ่ม file export/import
-- รูปขนาดใหญ่ทำให้ Markdown และ local storage โตเร็ว; ควรใช้ไฟล์ภาพแยกในงาน production
-- เมื่อแก้ข้อความหรือเพิ่มรูป การจัดวางอาจเปลี่ยนและหมึกเดิมอาจไม่ตรงตำแหน่งข้อความเดิม
-- ความสูง canvas ขั้นต่ำตั้งไว้สำหรับเอกสารตัวอย่าง; งาน production ควรวัด layout และแบ่งเอกสารยาวเป็นหน้า/tiles
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev/), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.
