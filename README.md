@@ -30,7 +30,8 @@ flutter test
 flutter run
 ```
 
-The app currently targets Android and iOS.
+The app targets Android and iOS for mobile use, with macOS and Web targets for
+local development and previewing without a connected mobile device.
 
 ## Getting Started
 
